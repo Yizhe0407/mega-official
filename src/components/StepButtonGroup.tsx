@@ -40,9 +40,17 @@ export function StepButtonGroup({
   const { sendLineMessage } = useLiffMessage(); //不能放在handleNextClick內，React Hook只能在組件的最外層呼叫
   const handleNextClick = async () => {
     if (currentStep === totalSteps) {
-      await send()
-      await sendLineMessage();
-      toast.loading('處理中...');
+      await toast.promise(
+        (async () => {
+          await send()
+          await sendLineMessage()
+        })(),
+        {
+          loading: '處理中...',
+          success: '預約完成！',
+          error: '預約失敗，請稍後再試',
+        }
+      )
       router.push('/final')
     } else {
       nextStep()
