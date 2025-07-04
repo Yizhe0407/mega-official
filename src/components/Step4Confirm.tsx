@@ -10,6 +10,16 @@ export function Step4Confirm() {
   const step2Data = useStepStore((state) => state.step2Data)
   const step3Data = useStepStore((state) => state.step3Data)
 
+  // 處理服務項目顯示
+  const getServiceList = () => {
+    const list = [...(step2Data.selectServe || [])]
+    const otherIndex = list.indexOf("其他")
+    if (otherIndex !== -1 && step2Data.otherService) {
+      list[otherIndex] = `其他(${step2Data.otherService})`
+    }
+    return list.join("、")
+  }
+
   return (
     <div className="min-h-screen bg-background pb-24">
       <ProgressBar />
@@ -50,7 +60,7 @@ export function Step4Confirm() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-sm">選擇項目</span>
-                    <span className="text-sm font-bold">{step2Data.selectServe.join("、")}</span>
+                    <span className="text-sm font-bold">{getServiceList()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm">到府牽車</span>

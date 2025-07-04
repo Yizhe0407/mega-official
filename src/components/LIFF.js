@@ -6,6 +6,16 @@ export default function LIFF() {
     const step2Data = useStepStore((state) => state.step2Data);
     const step3Data = useStepStore((state) => state.step3Data);
 
+    // 處理服務項目顯示
+    const getServiceList = () => {
+        const list = [...(step2Data.selectServe || [])];
+        const otherIndex = list.indexOf("其他");
+        if (otherIndex !== -1 && step2Data.otherService) {
+            list[otherIndex] = `其他(${step2Data.otherService})`;
+        }
+        return list.join('、');
+    };
+
     const sendLineMessage = async () => {
         try {
             const flexMessage = {
@@ -148,7 +158,7 @@ export default function LIFF() {
                                             },
                                             {
                                                 type: "text",
-                                                text: step2Data.selectServe.join(', '),
+                                                text: getServiceList(),
                                                 size: "md",
                                                 color: "#111111",
                                                 align: "end",
