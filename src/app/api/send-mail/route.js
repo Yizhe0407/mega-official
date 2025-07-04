@@ -35,8 +35,7 @@ export async function POST(request) {
           </ul>
         </div>
         <div style="background: #eaf6ff; border-radius: 10px; padding: 16px 12px; text-align: center; margin-bottom: 16px;">
-          <span style="color: #3498db; font-weight: 500; font-size: 1rem;">請儘快確認此預約並與客戶聯繫</span>
-          <p style="color: #666; margin: 8px 0 0 0; font-size: 0.95rem;">如有任何問題，請立即處理</p>
+          <span style="color: #3498db; font-weight: 500; font-size: 1rem;">請儘快確認並與客戶聯繫</span>
         </div>
         <div style="text-align: center; margin-top: 18px; font-size: 12px; color: #b0b8c1;">
           <p style="margin: 0;">此為系統自動發送的郵件，請勿直接回覆</p>
