@@ -206,13 +206,11 @@ export function useLiffMessage() {
 
             const result = await liff.sendMessages([flexMessage]);
             if (result) {
-                toast.success('已發送 LINE 通知');
                 return true;
             }
             return false;
         } catch (error) {
             console.error('LINE 訊息發送失敗:', error);
-            toast.error('LINE 通知發送失敗');
             return false;
         }
     };

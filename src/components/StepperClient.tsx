@@ -2,6 +2,7 @@
 
 import liff from "@line/liff";
 import { useEffect } from "react";
+import toast from 'react-hot-toast'
 import { useStepStore } from "@/store/step-store"
 import { Step1UserInfo } from "@/components/Step1UserInfo"
 import { Step2ServiceSelect } from "@/components/Step2ServiceSelect"
@@ -20,6 +21,8 @@ export default function StepperClient() {
     liff.init({
       liffId: liffId,
       withLoginOnExternalBrowser: true,
+    }).then(() => {
+      toast.success(liff.isLoggedIn() ? '登入成功' : '登入失敗')
     });
   }, []);
 

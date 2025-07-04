@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { useStepStore } from "@/store/step-store"
 import { useLiffMessage } from "@/hooks/useLiffMessage"
@@ -17,6 +18,7 @@ export function StepButtonGroup({
   const nextStep = useStepStore((s) => s.nextStep)
   const totalSteps = 4
   const step3Data = useStepStore((state) => state.step3Data)
+  const router = useRouter()
 
   // 第一頁時「上一步」禁用，否則啟用
   const isPreviousDisabled = currentStep === 1
@@ -38,11 +40,10 @@ export function StepButtonGroup({
   }
   const { sendLineMessage } = useLiffMessage(); //不能放在handleNextClick內，React Hook只能在組件的最外層呼叫
   const handleNextClick = async () => {
-    
     if (currentStep === totalSteps) {
       await send()
-      console.log("Sending LINE message...")
       await sendLineMessage();
+      router.push('/final')
     } else {
       nextStep()
     }
