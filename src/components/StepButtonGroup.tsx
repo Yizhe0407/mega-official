@@ -17,8 +17,10 @@ export function StepButtonGroup({
   const prevStep = useStepStore((s) => s.prevStep)
   const nextStep = useStepStore((s) => s.nextStep)
   const totalSteps = 4
-  const step3Data = useStepStore((state) => state.step3Data)
   const router = useRouter()
+  const step1Data = useStepStore((state) => state.step1Data)
+  const step2Data = useStepStore((state) => state.step2Data)
+  const step3Data = useStepStore((state) => state.step3Data)
 
   // 第一頁時「上一步」禁用，否則啟用
   const isPreviousDisabled = currentStep === 1
@@ -37,6 +39,23 @@ export function StepButtonGroup({
       console.error("Error during send:", error)
     }
   }
+  
+  const sendMail = async () => {
+    try {
+      const reservationData = {
+        ...step1Data,
+        ...step2Data,
+        ...step3Data,
+      }
+      await fetch('/api/send-mail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reservationData)
+      })
+    } catch (error) {
+      console.error("Error during sendMail:", error)
+    }
+  }
   const { sendLineMessage } = useLiffMessage(); //不能放在handleNextClick內，React Hook只能在組件的最外層呼叫
   const handleNextClick = async () => {
     if (currentStep === totalSteps) {
@@ -44,6 +63,7 @@ export function StepButtonGroup({
         (async () => {
           await send()
           await sendLineMessage()
+          await sendMail()
         })(),
         {
           loading: '處理中...',

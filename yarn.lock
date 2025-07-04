@@ -5999,6 +5999,7 @@ __metadata:
     lucide-react: "npm:^0.525.0"
     next: "npm:15.3.4"
     next-themes: "npm:^0.4.4"
+    nodemailer: "npm:^7.0.4"
     react: "npm:^19.0.0"
     react-day-picker: "npm:^9.7.0"
     react-dom: "npm:^19.0.0"
@@ -6216,6 +6217,13 @@ __metadata:
   version: 2.0.19
   resolution: "node-releases@npm:2.0.19"
   checksum: 10c0/52a0dbd25ccf545892670d1551690fe0facb6a471e15f2cfa1b20142a5b255b3aa254af5f59d6ecb69c2bec7390bc643c43aa63b13bf5e64b6075952e716b1aa
+  languageName: node
+  linkType: hard
+
+"nodemailer@npm:^7.0.4":
+  version: 7.0.4
+  resolution: "nodemailer@npm:7.0.4"
+  checksum: 10c0/ea6e1ed581f9f5519017430105eb37077e8a028805c6227166aefcaa1fd035063fd4dec84f535408b52bdf7a952e79ade66f14d1cf2fbf98790050d8161934d6
   languageName: node
   linkType: hard
 
