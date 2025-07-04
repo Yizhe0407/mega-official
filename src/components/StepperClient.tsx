@@ -1,7 +1,7 @@
 "use client"
 
-import liff from "@line/liff";
-import { useState, useEffect } from "react";
+// import liff from "@line/liff";
+// import { useState, useEffect } from "react";
 import { useStepStore } from "@/store/step-store"
 import { Step1UserInfo } from "@/components/Step1UserInfo"
 import { Step2ServiceSelect } from "@/components/Step2ServiceSelect"

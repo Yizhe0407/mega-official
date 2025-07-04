@@ -11,9 +11,7 @@ import { useState } from "react"
 import { useStepStore } from "@/store/step-store"
 
 export function Step2ServiceSelect() {
-  const [selectedServices, setSelectedServices] = useState<string[]>([])
-  const [showOtherInput, setShowOtherInput] = useState(false)
-  const [needPickup, setNeedPickup] = useState(false)
+  const [needPickup] = useState(false)
   const step2Data = useStepStore((state) => state.step2Data)
   const setStep2Data = useStepStore((state) => state.setStep2Data)
 
@@ -27,20 +25,17 @@ export function Step2ServiceSelect() {
 
   const toggleService = (serviceId: string) => {
     const current = step2Data?.selectServe || []
-    let newSelected: string[]
-    if (current.includes(serviceId)) {
-      newSelected = current.filter(id => id !== serviceId)
-      if (serviceId === "other") setShowOtherInput(false)
-    } else {
-      newSelected = [...current, serviceId]
-      if (serviceId === "other") setShowOtherInput(true)
-    }
+    const newSelected = current.includes(serviceId)
+      ? current.filter(id => id !== serviceId)
+      : [...current, serviceId]
+
     setStep2Data({
       ...step2Data,
       selectServe: newSelected,
       extra: needPickup,
     })
   }
+
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -68,7 +63,7 @@ export function Step2ServiceSelect() {
               </div>
             </div>
 
-            {step2Data?.selectServe?.includes("other") && (
+            {step2Data?.selectServe?.includes("其他") && (
               <div className="space-y-2">
                 <Label htmlFor="other-service">請說明其他服務需求</Label>
                 <Textarea

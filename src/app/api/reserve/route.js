@@ -1,8 +1,8 @@
 // app/api/hello/route.js
 import { db } from "@/lib/firebase";
-import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 
-export async function GET(request) {
+export async function GET() {
   const querySnapshot = await getDocs(collection(db, "reserve"));
   const items = [];
   querySnapshot.forEach((doc) => {

@@ -1,10 +1,47 @@
 import liff from "@line/liff";
 import { useStepStore } from "@/store/step-store";
 
+type TextComponent = {
+    type: "text";
+    text: string;
+    size?: string;
+    color?: string;
+    weight?: string;
+    align?: "start" | "end" | "center";
+    flex?: number;
+    wrap?: boolean;
+    margin?: string;
+};
+
+type SeparatorComponent = {
+    type: "separator";
+    margin?: string;
+};
+
+type BoxComponent = {
+    type: "box";
+    layout: "horizontal" | "vertical" | "baseline";
+    contents: FlexComponent[];
+    spacing?: string;
+    margin?: string;
+};
+
+type FlexComponent = TextComponent | SeparatorComponent | BoxComponent;
+
+type FlexBubble = {
+    type: "bubble";
+    body: BoxComponent;
+    styles?: {
+        footer?: {
+            separator: boolean;
+        };
+    };
+};
+
 type FlexMessage = {
     type: "flex";
     altText: string;
-    contents: any;
+    contents: FlexBubble;
 };
 
 export default function LIFF() {
@@ -158,7 +195,7 @@ export default function LIFF() {
                                                 size: "md",
                                                 color: "#111111",
                                                 align: "end",
-                                                wrap: true // Good practice for long lists of services
+                                                wrap: true
                                             }
                                         ]
                                     }
@@ -206,5 +243,6 @@ export default function LIFF() {
             return false;
         }
     };
+
     return { sendLineMessage };
 }
