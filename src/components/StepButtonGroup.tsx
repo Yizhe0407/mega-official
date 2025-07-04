@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { useStepStore } from "@/store/step-store"
+import liff from "@/components/LIFF"
 
 export function StepButtonGroup({
   isLoading = false,
@@ -37,6 +38,8 @@ export function StepButtonGroup({
   const handleNextClick = async () => {
     if (currentStep === totalSteps) {
       await send()
+      const { sendLineMessage } = liff();
+      await sendLineMessage();
     } else {
       nextStep()
     }
