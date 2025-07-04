@@ -33,7 +33,6 @@ export function StepButtonGroup({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(step3Data)
       })
-      toast.success('預約成功！感謝您的預約');
     } catch (error) {
       console.error("Error during send:", error)
     }
@@ -43,6 +42,7 @@ export function StepButtonGroup({
     if (currentStep === totalSteps) {
       await send()
       await sendLineMessage();
+      toast.loading('處理中...');
       router.push('/final')
     } else {
       nextStep()
