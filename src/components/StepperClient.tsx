@@ -1,8 +1,7 @@
 "use client"
 
-import tslib from "tslib";
 import liff from "@line/liff";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useStepStore } from "@/store/step-store"
 import { Step1UserInfo } from "@/components/Step1UserInfo"
 import { Step2ServiceSelect } from "@/components/Step2ServiceSelect"
