@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button"
 import { useStepStore } from "@/store/step-store"
-import liff from "@/components/LIFF"
+import { useLiffMessage } from "@/hooks/useLiffMessage"
+import toast from 'react-hot-toast'
 
 export function StepButtonGroup({
   isLoading = false,
@@ -30,15 +31,17 @@ export function StepButtonGroup({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(step3Data)
       })
+      toast.success('預約成功！感謝您的預約');
     } catch (error) {
       console.error("Error during send:", error)
     }
   }
-
+  const { sendLineMessage } = useLiffMessage(); //不能放在handleNextClick內，React Hook只能在組件的最外層呼叫
   const handleNextClick = async () => {
+    
     if (currentStep === totalSteps) {
       await send()
-      const { sendLineMessage } = liff();
+      console.log("Sending LINE message...")
       await sendLineMessage();
     } else {
       nextStep()

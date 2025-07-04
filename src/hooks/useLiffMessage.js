@@ -1,7 +1,8 @@
 import liff from "@line/liff";
 import { useStepStore } from "@/store/step-store";
+import toast from 'react-hot-toast';
 
-export default function LIFF() {
+export function useLiffMessage() {
     const step1Data = useStepStore((state) => state.step1Data);
     const step2Data = useStepStore((state) => state.step2Data);
     const step3Data = useStepStore((state) => state.step3Data);
@@ -203,10 +204,15 @@ export default function LIFF() {
                 }
             };
 
-            await liff.sendMessages([flexMessage]);
-            return true;
+            const result = await liff.sendMessages([flexMessage]);
+            if (result) {
+                toast.success('已發送 LINE 通知');
+                return true;
+            }
+            return false;
         } catch (error) {
             console.error('LINE 訊息發送失敗:', error);
+            toast.error('LINE 通知發送失敗');
             return false;
         }
     };
