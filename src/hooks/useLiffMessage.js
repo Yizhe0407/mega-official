@@ -1,6 +1,5 @@
 import liff from "@line/liff";
 import { useStepStore } from "@/store/step-store";
-import toast from 'react-hot-toast';
 
 export function useLiffMessage() {
     const step1Data = useStepStore((state) => state.step1Data);
