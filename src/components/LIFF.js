@@ -1,49 +1,6 @@
 import liff from "@line/liff";
 import { useStepStore } from "@/store/step-store";
 
-type TextComponent = {
-    type: "text";
-    text: string;
-    size?: string;
-    color?: string;
-    weight?: string;
-    align?: "start" | "end" | "center";
-    flex?: number;
-    wrap?: boolean;
-    margin?: string;
-};
-
-type SeparatorComponent = {
-    type: "separator";
-    margin?: string;
-};
-
-type BoxComponent = {
-    type: "box";
-    layout: "horizontal" | "vertical" | "baseline";
-    contents: FlexComponent[];
-    spacing?: string;
-    margin?: string;
-};
-
-type FlexComponent = TextComponent | SeparatorComponent | BoxComponent;
-
-type FlexBubble = {
-    type: "bubble";
-    body: BoxComponent;
-    styles?: {
-        footer?: {
-            separator: boolean;
-        };
-    };
-};
-
-type FlexMessage = {
-    type: "flex";
-    altText: string;
-    contents: FlexBubble;
-};
-
 export default function LIFF() {
     const step1Data = useStepStore((state) => state.step1Data);
     const step2Data = useStepStore((state) => state.step2Data);
@@ -51,7 +8,7 @@ export default function LIFF() {
 
     const sendLineMessage = async () => {
         try {
-            const flexMessage: FlexMessage = {
+            const flexMessage = {
                 type: "flex",
                 altText: "預約成功通知",
                 contents: {
