@@ -13,20 +13,21 @@ export function StepButtonGroup({
   isLoading?: boolean
   isNextDisabled?: boolean
 }) {
-  const currentStep = useStepStore((s) => s.currentStep)
-  const prevStep = useStepStore((s) => s.prevStep)
-  const nextStep = useStepStore((s) => s.nextStep)
-  const totalSteps = 4
+  const currentStep = useStepStore((step) => step.currentStep)
+  const prevStep = useStepStore((step) => step.prevStep)
+  const nextStep = useStepStore((step) => step.nextStep)
+  const FIRST_STEP = 1
+  const TOTAL_STEP = 4
   const router = useRouter()
   const step1Data = useStepStore((state) => state.step1Data)
   const step2Data = useStepStore((state) => state.step2Data)
   const step3Data = useStepStore((state) => state.step3Data)
 
   // 第一頁時「上一步」禁用，否則啟用
-  const isPreviousDisabled = currentStep === 1
+  const isPreviousDisabled = currentStep === FIRST_STEP
 
   // 第四頁時「下一步」顯示「確認預約」，否則顯示「下一步」
-  const nextButtonText = currentStep === totalSteps ? "確認預約" : "下一步"
+  const nextButtonText = currentStep === TOTAL_STEP ? "確認預約" : "下一步"
 
   const send = async () => {
     try {
@@ -58,7 +59,7 @@ export function StepButtonGroup({
   }
   const { sendLineMessage } = useLiffMessage(); //不能放在handleNextClick內，React Hook只能在組件的最外層呼叫
   const handleNextClick = async () => {
-    if (currentStep === totalSteps) {
+    if (currentStep === TOTAL_STEP) {
       await toast.promise(
         (async () => {
           await send()

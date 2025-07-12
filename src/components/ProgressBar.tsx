@@ -2,13 +2,13 @@ import { cn } from "@/lib/utils"
 import { useStepStore } from "@/store/step-store"
 
 export function ProgressBar() {
-  const currentStep = useStepStore((s) => s.currentStep)
-  const totalSteps = 4
+  const currentStep = useStepStore((step) => step.currentStep)
+  const TOTAL_STEP = 4
 
   return (
     <div className="fixed top-0 left-1/2 -translate-x-1/2 max-w-md px-4 py-4 z-10 bg-white mx-auto">
       <div className="flex items-center justify-between mb-3">
-        {Array.from({ length: totalSteps }, (_, index) => {
+        {Array.from({ length: TOTAL_STEP }, (_, index) => {
           const stepNumber = index + 1
           const isActive = stepNumber <= currentStep
           const isCurrent = stepNumber === currentStep
@@ -27,7 +27,7 @@ export function ProgressBar() {
               >
                 {stepNumber}
               </div>
-              {index < totalSteps - 1 && (
+              {index < TOTAL_STEP - 1 && (
                 <div
                   className={cn(
                     "w-12 h-0.5 mx-2 transition-colors",

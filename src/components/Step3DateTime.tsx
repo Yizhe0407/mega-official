@@ -16,7 +16,7 @@ export function Step3DateTime() {
   const setStep3Data = useStepStore((state) => state.setStep3Data)
   const [existTime, setExistTime] = useState<[string, string][]>([]);
 
-  const timeSlots = ["8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "13:00", "14:00", "15:00"]
+  const TIME_SLOTS = ["8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "13:00", "14:00", "15:00"]
 
   useEffect(() => {
     const getTime = async () => {
@@ -70,7 +70,7 @@ export function Step3DateTime() {
               </div>
             ) : (
               <div className="grid grid-cols-3 gap-3">
-                {timeSlots.map((time) => (
+                {TIME_SLOTS.map((time) => (
                   <Button
                     disabled={
                       !step3Data.date ||  // 尚未選擇日期時，按鈕不可點
