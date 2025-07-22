@@ -10,7 +10,7 @@ import { Step3DateTime } from "@/components/Step3DateTime"
 import { Step4Confirm } from "@/components/Step4Confirm"
 
 export default function StepperClient() {
-  const currentStep = useStepStore((s) => s.currentStep)
+  const currentStep = useStepStore((step) => step.currentStep)
 
   useEffect(() => {
     const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
