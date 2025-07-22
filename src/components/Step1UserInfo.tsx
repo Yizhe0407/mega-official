@@ -30,7 +30,7 @@ export function Step1UserInfo() {
               />
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <p className="text-md font-bold">
                 手機號碼 <span className="text-destructive">*</span>
               </p>
@@ -42,7 +42,7 @@ export function Step1UserInfo() {
                 value={step1Data?.phone || ""}
                 onChange={(e) => setStep1Data({ phone: e.target.value })}
               />
-            </div>
+            </div> */}
 
             <div className="space-y-2">
               <p className="text-md font-bold">
@@ -60,7 +60,7 @@ export function Step1UserInfo() {
         </Card>
       </div>
 
-      <StepButtonGroup isNextDisabled={!step1Data?.name || !step1Data?.phone || !step1Data?.license} />
+      <StepButtonGroup isNextDisabled={!step1Data?.name || !step1Data?.license} />
     </div>
   )
 }

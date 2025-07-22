@@ -38,14 +38,14 @@ export function Step4Confirm() {
                     <span className="text-sm">姓名</span>
                     <span className="text-sm font-bold">{step1Data.name}</span>
                   </div>
-                  <div className="flex justify-between">
+                  {/* <div className="flex justify-between">
                     <span className="text-sm">手機號碼</span>
                     <span className="text-sm font-bold">
                       {step1Data.phone
                         ? step1Data.phone.replace(/^(\d{4})(\d{3})(\d{3})$/, "$1-$2-$3")
                         : ""}
                     </span>
-                  </div>
+                  </div> */}
                   <div className="flex justify-between">
                     <span className="text-sm">車牌號碼</span>
                     <span className="text-sm font-bold">{step1Data.license}</span>
