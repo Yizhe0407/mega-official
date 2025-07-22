@@ -30,7 +30,6 @@ export async function POST(request) {
             <li style="margin: 7px 0; color: #222;"><strong>預約日期：</strong>${reservation.date}</li>
             <li style="margin: 7px 0; color: #222;"><strong>預約時間：</strong>${reservation.time}</li>
             <li style="margin: 7px 0; color: #222;"><strong>車牌號碼：</strong>${reservation.license}</li>
-            <li style="margin: 7px 0; color: #222;"><strong>聯絡電話：</strong>${reservation.phone}</li>
             <li style="margin: 7px 0; color: #222;"><strong>是否需要到府牽車：</strong>${reservation.extra ? '是' : '否'}</li>
           </ul>
         </div>
