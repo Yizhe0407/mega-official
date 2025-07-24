@@ -1,6 +1,6 @@
-// app/api/hello/route.js
-import { db } from "@/lib/firebase";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+// app/api/reserve/route.js
+import { db } from "@/lib/firebaseAdmin";
+import { collection, getDocs, addDoc } from "firebase-admin/firestore";
 
 export async function GET() {
   const querySnapshot = await getDocs(collection(db, "reserve"));
@@ -21,4 +21,3 @@ export async function POST(request) {
     return Response.json({ error: error.message }, { status: 500 });
   }
 }
-
