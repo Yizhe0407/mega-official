@@ -25,7 +25,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          {/* <VerifyLIFF/> */}
+          <VerifyLIFF/>
           {children}
           <Toaster />
         </ThemeProvider>
