@@ -1,7 +1,13 @@
 "use client";
 import { useState } from "react";
 import { useStepStore } from "@/store/step-store";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -63,9 +69,7 @@ export default function Page() {
         {/* 用戶頭像區域 */}
         <div className="flex flex-col items-center mb-6">
           <Avatar className="w-20 h-20 mb-3">
-            <AvatarFallback className="text-lg font-medium">
-              {step1Data?.name}
-            </AvatarFallback>
+            <AvatarFallback className="text-lg font-medium"></AvatarFallback>
           </Avatar>
           <h1 className="text-xl font-semibold">{step1Data?.name || ""}</h1>
         </div>
@@ -91,6 +95,11 @@ export default function Page() {
             )}
           </CardHeader>
           <CardContent className="space-y-4">
+            {!step1Data?.name && (
+              <p className="text-sm text-muted-foreground -mt-2 mb-4">
+                請先完成基本資料設定，未來系統將會自動帶入，節省您的時間。
+              </p>
+            )}
             <div className="space-y-2">
               <Label htmlFor="profile-name">姓名</Label>
               {isEditing ? (
@@ -140,6 +149,13 @@ export default function Page() {
               )}
             </div>
           </CardContent>
+          {isEditing && (
+            <CardFooter>
+              <p className="text-xs text-muted-foreground text-center w-full">
+                更新完畢後，請點擊右上角的儲存按鈕。
+              </p>
+            </CardFooter>
+          )}
         </Card>
       </div>
     </div>
