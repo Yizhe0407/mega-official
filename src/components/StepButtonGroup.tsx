@@ -79,7 +79,7 @@ export function StepButtonGroup({
   }
 
   return (
-    <div className="fixed bottom-16 left-0 right-0 p-4 bg-background border-t">
+    <div className="fixed bottom-16 left-0 right-0 p-4 bg-background">
       <div className="flex gap-3 max-w-md mx-auto">
         <Button
           variant="outline"
