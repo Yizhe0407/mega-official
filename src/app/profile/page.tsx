@@ -47,6 +47,7 @@ export default function Page() {
       });
 
       const data = await response.json();
+      console.log("Profile data:", data);
       setStep1Data({
         name: data.name || "",
         phone: data.phone || "",

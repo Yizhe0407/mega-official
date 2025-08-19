@@ -41,8 +41,7 @@ export default function VerifyLIFF() {
       const response = await fetch(`/api/profile?id=${userId}`, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${liff.getAccessToken()}`,
+          "Content-Type": "application/json"
         },
       });
 
