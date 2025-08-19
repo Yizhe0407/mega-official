@@ -2,13 +2,13 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from 'react-hot-toast'
+import VerifyLIFF from "@/components/VerifyLIFF"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title: '兆豐預約',
-  description: '兆豐預約系統',
-  generator: 'v0.dev',
+  description: '兆豐預約系統'
 }
 
 export default function RootLayout({
@@ -25,6 +25,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          {/* <VerifyLIFF/> */}
           {children}
           <Toaster />
         </ThemeProvider>
