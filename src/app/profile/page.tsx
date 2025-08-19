@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Edit, Save, X } from "lucide-react";
 
 export default function Page() {
@@ -58,6 +58,7 @@ export default function Page() {
         {/* 用戶頭像區域 */}
         <div className="flex flex-col items-center mb-6">
           <Avatar className="w-20 h-20 mb-3">
+            <AvatarImage src={step1Data?.pictureUrl} alt="User Avatar" />
             <AvatarFallback className="text-lg font-medium"></AvatarFallback>
           </Avatar>
           <h1 className="text-xl font-semibold">{step1Data?.name || ""}</h1>

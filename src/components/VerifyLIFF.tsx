@@ -1,6 +1,6 @@
 "use client";
 import liff from "@line/liff";
-import { useEffect, useRef } from "react"; // 引入 useRef
+import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useStepStore } from "@/store/step-store";
@@ -35,11 +35,12 @@ export default function VerifyLIFF() {
         if (liff.isLoggedIn()) {
           const profile = await liff.getProfile();
           setUserId(profile.userId);
-          // 登入成功提示可以考慮只在特定情境下顯示，或直接移除
-          // toast.success("登入成功"); 
+          // 將從 LINE 取得的 pictureUrl 存到 store
+          if (profile.pictureUrl) {
+            setStep1Data({ pictureUrl: profile.pictureUrl });
+          }
         } else {
-          // 如果需要，可以在此處強制登入
-          // liff.login();
+          liff.login();
         }
       } catch (error) {
         console.error("LIFF Initialization failed:", error);
@@ -48,7 +49,7 @@ export default function VerifyLIFF() {
     };
 
     initializeLiff();
-  }, [setUserId]); // 依賴項維持不變
+  }, [setUserId]);
 
   // Effect for fetching profile data once userId is available
   useEffect(() => {
