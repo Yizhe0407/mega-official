@@ -19,8 +19,16 @@ export default function VerifyLIFF() {
       })
       .then(() => {
         toast.success(liff.isLoggedIn() ? "登入成功" : "登入失敗");
-        const profile = liff.getProfile();
-        console.log("LIFF Profile:", profile);
+        if (liff.isLoggedIn()) {
+          liff
+            .getProfile()
+            .then((profile) => {
+              console.log("LIFF Profile:", profile);
+            })
+            .catch((err) => {
+              console.error("取得使用者 profile 失敗", err);
+            });
+        }
       });
   }, []);
   return <div></div>;
