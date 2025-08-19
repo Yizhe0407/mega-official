@@ -3,7 +3,7 @@ import { db } from "@/lib/firebaseAdmin";
 
 export async function GET(request) {
     const { searchParams} = new URL(request.url);
-    const id = searchParams.get("userId");
+    const id = searchParams.get("id");
 
     if (id) {
         const docRef = db.collection("profile").doc(id);
