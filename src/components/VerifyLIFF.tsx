@@ -1,7 +1,7 @@
 "use client";
 import liff from "@line/liff";
 import { useEffect } from "react";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 export default function VerifyLIFF() {
   useEffect(() => {
@@ -19,6 +19,8 @@ export default function VerifyLIFF() {
       })
       .then(() => {
         toast.success(liff.isLoggedIn() ? "登入成功" : "登入失敗");
+        const profile = liff.getProfile();
+        console.log("LIFF Profile:", profile);
       });
   }, []);
   return <div></div>;
