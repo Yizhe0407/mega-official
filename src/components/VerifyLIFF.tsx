@@ -9,6 +9,8 @@ export default function VerifyLIFF() {
   const router = useRouter();
   const { userId, setUserId } = useStepStore();
   const setStep1Data = useStepStore((state) => state.setStep1Data);
+
+  // Effect for LIFF initialization and getting user ID
   useEffect(() => {
     const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
     if (!liffId) {
@@ -29,34 +31,55 @@ export default function VerifyLIFF() {
             .getProfile()
             .then((profile) => {
               setUserId(profile.userId);
-              console.log("User ID:", userId);
             })
             .catch((err) => {
               console.log("error", err);
             });
         }
       });
+  }, [setUserId]);
 
+  // Effect for fetching profile data once userId is available
+  useEffect(() => {
     async function getProfile() {
-      const response = await fetch(`/api/profile?id=${userId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-      });
-
-      if (response.status === 404) {
-        router.push("/profile");
+      // Only run if userId is available
+      if (!userId) {
+        return;
       }
-      const data = await response.json();
-      console.log("Profile data:", data);
-      setStep1Data({
-        name: data.name || "",
-        phone: data.phone || "",
-        license: data.license || "",
-      });
+
+      try {
+        const response = await fetch(`/api/profile?id=${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.status === 404) {
+          router.push("/profile");
+          return;
+        }
+
+        if (!response.ok) {
+          // Handle other server errors without trying to parse JSON
+          console.error("Failed to fetch profile:", response.statusText);
+          toast.error("無法取得使用者資料");
+          return;
+        }
+
+        const data = await response.json();
+        console.log("Profile data:", data);
+        setStep1Data({
+          name: data.name || "",
+          phone: data.phone || "",
+          license: data.license || "",
+        });
+      } catch (error) {
+        console.error("Error fetching or parsing profile data:", error);
+      }
     }
     getProfile();
-  }, [setUserId]);
+  }, [userId, router, setStep1Data]); // Add all dependencies
+
   return <div></div>;
 }
