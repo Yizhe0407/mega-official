@@ -2,10 +2,13 @@
 import liff from "@line/liff";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 import { useStepStore } from "@/store/step-store";
 
 export default function VerifyLIFF() {
-  const { setUserId } = useStepStore();
+  const router = useRouter();
+  const { userId, setUserId } = useStepStore();
+  const setStep1Data = useStepStore((state) => state.setStep1Data);
   useEffect(() => {
     const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
     if (!liffId) {
@@ -21,19 +24,39 @@ export default function VerifyLIFF() {
       })
       .then(() => {
         if (liff.isLoggedIn()) {
-          liff.getProfile()
+          toast.success("登入成功");
+          liff
+            .getProfile()
             .then((profile) => {
               setUserId(profile.userId);
-              toast.success("User's ID: " + profile.userId);
+              console.log("User ID:", userId);
             })
             .catch((err) => {
-              toast.error("取得 profile 失敗");
               console.log("error", err);
             });
-        } else {
-          toast.error("尚未登入 LINE");
         }
       });
+
+    async function getProfile() {
+      const response = await fetch(`/api/profile?id=${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${liff.getAccessToken()}`,
+        },
+      });
+
+      if (response.status === 404) {
+        router.push("/profile");
+      }
+      const data = await response.json();
+      setStep1Data({
+        name: data.name || "",
+        phone: data.phone || "",
+        license: data.license || "",
+      });
+    }
+    getProfile();
   }, [setUserId]);
   return <div></div>;
 }
