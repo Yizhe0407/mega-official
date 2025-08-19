@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useStepStore } from "@/store/step-store";
 import {
   Card,
@@ -12,29 +12,40 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Edit, Save, X } from "lucide-react";
+import { Edit, Save, X, Loader2 } from "lucide-react";
 
 export default function Page() {
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const { userId } = useStepStore();
   const step1Data = useStepStore((state) => state.step1Data); // 取得目前資料
   const setStep1Data = useStepStore((state) => state.setStep1Data);
+  const [localData, setLocalData] = useState(step1Data);
+
+  useEffect(() => {
+    if (!isEditing) {
+      setLocalData(step1Data);
+    }
+  }, [step1Data, isEditing]);
 
   const handleEdit = () => {
+    setLocalData(step1Data); // 進入編輯模式時，從 store 同步資料到本地 state
     setIsEditing(true);
   };
 
   const handleCancel = () => {
     setIsEditing(false);
+    // 不做任何事，localData 將在下次編輯時被重置
   };
 
   const handleSave = async () => {
+    setIsSaving(true);
     try {
       const response = await fetch("/api/profile", {
         method: "POST",
         body: JSON.stringify({
           userId,
-          ...step1Data,
+          ...localData, // 使用本地 state 的資料進行儲存
         }),
         headers: {
           "Content-Type": "application/json",
@@ -46,9 +57,12 @@ export default function Page() {
         return;
       }
 
+      setStep1Data(localData); // 儲存成功後，更新到 store
       setIsEditing(false);
     } catch (error) {
       console.error("An error occurred while saving the profile:", error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -75,11 +89,25 @@ export default function Page() {
               </Button>
             ) : (
               <div className="flex gap-2">
-                <Button variant="ghost" size="sm" onClick={handleCancel}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleCancel}
+                  disabled={isSaving}
+                >
                   <X className="h-4 w-4" />
                 </Button>
-                <Button variant="default" size="sm" onClick={handleSave}>
-                  <Save className="h-4 w-4" />
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={handleSave}
+                  disabled={isSaving}
+                >
+                  {isSaving ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4" />
+                  )}
                 </Button>
               </div>
             )}
@@ -95,9 +123,12 @@ export default function Page() {
               {isEditing ? (
                 <Input
                   id="profile-name"
-                  value={step1Data?.name || ""}
-                  onChange={(e) => setStep1Data({ name: e.target.value })}
+                  value={localData?.name || ""}
+                  onChange={(e) =>
+                    setLocalData({ ...localData, name: e.target.value })
+                  }
                   className="h-12"
+                  disabled={isSaving}
                 />
               ) : (
                 <div className="h-12 px-3 py-2 border rounded-md bg-muted/50 flex items-center">
@@ -112,9 +143,12 @@ export default function Page() {
                 <Input
                   id="profile-phone"
                   type="tel"
-                  value={step1Data?.phone || ""}
-                  onChange={(e) => setStep1Data({ phone: e.target.value })}
+                  value={localData?.phone || ""}
+                  onChange={(e) =>
+                    setLocalData({ ...localData, phone: e.target.value })
+                  }
                   className="h-12"
+                  disabled={isSaving}
                 />
               ) : (
                 <div className="h-12 px-3 py-2 border rounded-md bg-muted/50 flex items-center">
@@ -128,9 +162,12 @@ export default function Page() {
               {isEditing ? (
                 <Input
                   id="profile-license"
-                  value={step1Data?.license || ""}
-                  onChange={(e) => setStep1Data({ license: e.target.value })}
+                  value={localData?.license || ""}
+                  onChange={(e) =>
+                    setLocalData({ ...localData, license: e.target.value })
+                  }
                   className="h-12"
+                  disabled={isSaving}
                 />
               ) : (
                 <div className="h-12 px-3 py-2 border rounded-md bg-muted/50 flex items-center">
