@@ -28,11 +28,9 @@ export default function Page() {
     setIsEditing(false);
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-
-    async function updateProfile() {
-      await fetch("/api/profile", {
+  const handleSave = async () => {
+    try {
+      const response = await fetch("/api/profile", {
         method: "POST",
         body: JSON.stringify({
           userId,
@@ -42,25 +40,16 @@ export default function Page() {
           "Content-Type": "application/json",
         },
       });
-    }
-    updateProfile();
-    async function getProfile() {
-      const response = await fetch(`/api/profile?id=${userId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
 
-      const data = await response.json();
-      console.log("Profile data:", data);
-      setStep1Data({
-        name: data.name || "",
-        phone: data.phone || "",
-        license: data.license || "",
-      });
+      if (!response.ok) {
+        console.error("Failed to update profile");
+        return;
+      }
+
+      setIsEditing(false);
+    } catch (error) {
+      console.error("An error occurred while saving the profile:", error);
     }
-    getProfile();
   };
 
   return (

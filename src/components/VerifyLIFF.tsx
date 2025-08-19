@@ -1,74 +1,78 @@
 "use client";
 import liff from "@line/liff";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react"; // 引入 useRef
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useStepStore } from "@/store/step-store";
 
 export default function VerifyLIFF() {
   const router = useRouter();
-  const { userId, setUserId } = useStepStore();
-  const setStep1Data = useStepStore((state) => state.setStep1Data);
+  const { userId, setUserId, setStep1Data } = useStepStore();
+  const liffInitialized = useRef(false); // 使用 ref 防止重複初始化
 
   // Effect for LIFF initialization and getting user ID
   useEffect(() => {
-    const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
-    if (!liffId) {
-      console.error(
-        "LIFF ID is not defined. Please set the LIFF_ID environment variable."
-      );
+    // 防止在開發模式的嚴格模式下重複執行
+    if (liffInitialized.current) {
       return;
     }
-    liff
-      .init({
-        liffId: liffId,
-        withLoginOnExternalBrowser: true,
-      })
-      .then(() => {
-        if (liff.isLoggedIn()) {
-          toast.success("登入成功");
-          liff
-            .getProfile()
-            .then((profile) => {
-              setUserId(profile.userId);
-            })
-            .catch((err) => {
-              console.log("error", err);
-            });
+    liffInitialized.current = true;
+
+    const initializeLiff = async () => {
+      try {
+        const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
+        if (!liffId) {
+          console.error("LIFF ID is not defined.");
+          toast.error("LIFF 設定錯誤");
+          return;
         }
-      });
-  }, [setUserId]);
+
+        await liff.init({
+          liffId: liffId,
+          withLoginOnExternalBrowser: true,
+        });
+
+        if (liff.isLoggedIn()) {
+          const profile = await liff.getProfile();
+          setUserId(profile.userId);
+          // 登入成功提示可以考慮只在特定情境下顯示，或直接移除
+          // toast.success("登入成功"); 
+        } else {
+          // 如果需要，可以在此處強制登入
+          // liff.login();
+        }
+      } catch (error) {
+        console.error("LIFF Initialization failed:", error);
+        toast.error("LIFF 初始化失敗");
+      }
+    };
+
+    initializeLiff();
+  }, [setUserId]); // 依賴項維持不變
 
   // Effect for fetching profile data once userId is available
   useEffect(() => {
-    async function getProfile() {
-      // Only run if userId is available
-      if (!userId) {
-        return;
-      }
+    if (!userId) {
+      return;
+    }
 
+    const getProfile = async () => {
       try {
-        const response = await fetch(`/api/profile?id=${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(`/api/profile?id=${userId}`);
 
         if (response.status === 404) {
+          // 新用戶，導向設定頁面
           router.push("/profile");
           return;
         }
 
         if (!response.ok) {
-          // Handle other server errors without trying to parse JSON
           console.error("Failed to fetch profile:", response.statusText);
           toast.error("無法取得使用者資料");
           return;
         }
 
         const data = await response.json();
-        console.log("Profile data:", data);
         setStep1Data({
           name: data.name || "",
           phone: data.phone || "",
@@ -76,10 +80,12 @@ export default function VerifyLIFF() {
         });
       } catch (error) {
         console.error("Error fetching or parsing profile data:", error);
+        toast.error("讀取資料時發生錯誤");
       }
-    }
+    };
+
     getProfile();
-  }, [userId, router, setStep1Data]); // Add all dependencies
+  }, [userId, router, setStep1Data]);
 
   return <div></div>;
 }
