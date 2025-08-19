@@ -1,14 +1,14 @@
 "use client";
+import { useState } from "react";
+import { useStepStore } from "@/store/step-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Edit, Save, X } from "lucide-react";
-import { useState } from "react";
-import { useStepStore } from "@/store/step-store";
 
-export default function page() {
+export default function Page() {
   const [isEditing, setIsEditing] = useState(false);
   const { userId } = useStepStore();
   const step1Data = useStepStore((state) => state.step1Data); // 取得目前資料
