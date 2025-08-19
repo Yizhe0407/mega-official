@@ -5,6 +5,7 @@ import { StepButtonGroup } from "./StepButtonGroup"
 import { useStepStore } from "@/store/step-store"
 
 export function Step1UserInfo() {
+  const { userId } = useStepStore();
   const step1Data = useStepStore((state) => state.step1Data) // 取得目前資料
   const setStep1Data = useStepStore((state) => state.setStep1Data)
   return (
@@ -25,7 +26,7 @@ export function Step1UserInfo() {
                 id="name" 
                 placeholder="請輸入您的姓名" 
                 className="h-12"
-                value={step1Data?.name || ""}
+                value={step1Data?.name || userId}
                 onChange={(e) => setStep1Data({ name: e.target.value })}
               />
             </div>
