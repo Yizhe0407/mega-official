@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useStepStore } from "@/store/step-store";
-import { set } from "date-fns";
 
 export default function VerifyLIFF() {
   const router = useRouter();
