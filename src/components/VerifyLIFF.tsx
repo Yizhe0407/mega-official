@@ -4,10 +4,11 @@ import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useStepStore } from "@/store/step-store";
+import { set } from "date-fns";
 
 export default function VerifyLIFF() {
   const router = useRouter();
-  const { setUserId, setStep1Data } = useStepStore();
+  const { setUserId, setStep1Data, setIsLoading } = useStepStore();
   const liffInitialized = useRef(false);
 
   useEffect(() => {
@@ -17,6 +18,7 @@ export default function VerifyLIFF() {
     liffInitialized.current = true;
 
     const initializeAndFetchProfile = async () => {
+      setIsLoading(true);
       try {
         const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
         if (!liffId) {
@@ -68,6 +70,8 @@ export default function VerifyLIFF() {
       } catch (error) {
         console.error("LIFF/Profile process failed:", error);
         toast.error("初始化或讀取資料時發生錯誤");
+      } finally {
+        setIsLoading(false);
       }
     };
 

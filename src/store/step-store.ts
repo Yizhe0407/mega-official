@@ -24,6 +24,7 @@ type StepState = {
   step2Data: Step2Data;
   step3Data: Step3Data;
   userId: string;
+  isLoading: boolean;
   setCurrentStep: (step: number) => void;
   nextStep: () => void;
   prevStep: () => void;
@@ -31,6 +32,7 @@ type StepState = {
   setStep2Data: (data: Step2Data) => void;
   setStep3Data: (data: Step3Data) => void;
   setUserId: (userId: string) => void;
+  setIsLoading: (loading: boolean) => void;
 };
 
 export const useStepStore = create<StepState>((set, get) => ({
@@ -39,6 +41,7 @@ export const useStepStore = create<StepState>((set, get) => ({
   step2Data: { selectServe: [] },
   step3Data: { date: "", time: "" },
   userId: "",
+  isLoading: false,
   setCurrentStep: (step) => set({ currentStep: step }),
   nextStep: () => {
     const { currentStep } = get();
@@ -52,4 +55,5 @@ export const useStepStore = create<StepState>((set, get) => ({
   setStep2Data: (data) => set({ step2Data: { ...get().step2Data, ...data } }),
   setStep3Data: (data) => set({ step3Data: { ...get().step3Data, ...data } }),
   setUserId: (userId) => set({ userId: userId }),
+  setIsLoading: (loading) => set({ isLoading: loading }),
 }));

@@ -7,6 +7,7 @@ import { useStepStore } from "@/store/step-store"
 export function Step1UserInfo() {
   const step1Data = useStepStore((state) => state.step1Data) // 取得目前資料
   const setStep1Data = useStepStore((state) => state.setStep1Data)
+  const isLoading = useStepStore((state) => state.isLoading)
   return (
     <div className="min-h-screen bg-background pb-24">
       <ProgressBar />
@@ -23,7 +24,7 @@ export function Step1UserInfo() {
               </p>
               <Input 
                 id="name" 
-                placeholder="請輸入您的姓名" 
+                placeholder={isLoading ? "正在獲取中..." : "請輸入您的姓名"}
                 className="h-12"
                 value={step1Data?.name || ""}
                 onChange={(e) => setStep1Data({ name: e.target.value })}
@@ -50,7 +51,7 @@ export function Step1UserInfo() {
               </p>
               <Input 
                 id="license" 
-                placeholder="請輸入車牌號碼" 
+                placeholder={isLoading ? "正在獲取中..." : "請輸入車牌號碼"} 
                 className="h-12"
                 value={step1Data?.license || ""}
                 onChange={(e) => setStep1Data({ license: e.target.value.toUpperCase() })}
