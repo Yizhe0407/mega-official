@@ -7,18 +7,16 @@ import { useStepStore } from "@/store/step-store";
 
 export default function VerifyLIFF() {
   const router = useRouter();
-  const { userId, setUserId, setStep1Data } = useStepStore();
-  const liffInitialized = useRef(false); // 使用 ref 防止重複初始化
+  const { setUserId, setStep1Data } = useStepStore();
+  const liffInitialized = useRef(false);
 
-  // Effect for LIFF initialization and getting user ID
   useEffect(() => {
-    // 防止在開發模式的嚴格模式下重複執行
     if (liffInitialized.current) {
       return;
     }
     liffInitialized.current = true;
 
-    const initializeLiff = async () => {
+    const initializeAndFetchProfile = async () => {
       try {
         const liffId = process.env.NEXT_PUBLIC_LIFF_ID;
         if (!liffId) {
@@ -32,37 +30,22 @@ export default function VerifyLIFF() {
           withLoginOnExternalBrowser: true,
         });
 
-        if (liff.isLoggedIn()) {
-          const profile = await liff.getProfile();
-          setUserId(profile.userId);
-          // 將從 LINE 取得的 pictureUrl 存到 store
-          if (profile.pictureUrl) {
-            setStep1Data({ pictureUrl: profile.pictureUrl });
-          }
-        } else {
+        if (!liff.isLoggedIn()) {
           liff.login();
+          return; // 登入會重新導向，後續程式碼不執行
         }
-      } catch (error) {
-        console.error("LIFF Initialization failed:", error);
-        toast.error("LIFF 初始化失敗");
-      }
-    };
 
-    initializeLiff();
-  }, [setUserId]);
+        // 登入後，直接取得 LINE Profile
+        const lineProfile = await liff.getProfile();
+        const currentUserId = lineProfile.userId;
+        setUserId(currentUserId);
 
-  // Effect for fetching profile data once userId is available
-  useEffect(() => {
-    if (!userId) {
-      return;
-    }
-
-    const getProfile = async () => {
-      try {
-        const response = await fetch(`/api/profile?id=${userId}`);
+        // 取得 userId 後，立即獲取後端儲存的 Profile
+        const response = await fetch(`/api/profile?id=${currentUserId}`);
 
         if (response.status === 404) {
-          // 新用戶，導向設定頁面
+          // 新用戶，只設定從 LINE 來的 pictureUrl，然後導向設定頁面
+          setStep1Data({ pictureUrl: lineProfile.pictureUrl });
           router.push("/profile");
           return;
         }
@@ -73,20 +56,23 @@ export default function VerifyLIFF() {
           return;
         }
 
-        const data = await response.json();
+        const dbProfile = await response.json();
+
+        // 將 LINE Profile 和資料庫 Profile 合併後，一次性更新到 store
         setStep1Data({
-          name: data.name || "",
-          phone: data.phone || "",
-          license: data.license || "",
+          pictureUrl: lineProfile.pictureUrl,
+          name: dbProfile.name || "",
+          phone: dbProfile.phone || "",
+          license: dbProfile.license || "",
         });
       } catch (error) {
-        console.error("Error fetching or parsing profile data:", error);
-        toast.error("讀取資料時發生錯誤");
+        console.error("LIFF/Profile process failed:", error);
+        toast.error("初始化或讀取資料時發生錯誤");
       }
     };
 
-    getProfile();
-  }, [userId, router, setStep1Data]);
+    initializeAndFetchProfile();
+  }, [router, setUserId, setStep1Data]);
 
   return <div></div>;
 }
