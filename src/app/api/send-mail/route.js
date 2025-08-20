@@ -49,6 +49,7 @@ export async function POST(request) {
     await transporter.sendMail(mailOptions)
     return Response.json({ success: true })
   } catch (error) {
+    console.error('[SEND_MAIL_ERROR]', error);
     return Response.json({ success: false, error: error.message }, { status: 500 })
   }
 }
