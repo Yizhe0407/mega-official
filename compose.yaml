@@ -1,28 +1,32 @@
-version: '3.8'
+version: "3.8"
 
 services:
   nextjs:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: nextjs-app
     ports:
       - "3000:3000"
+    env_file:
+      - .env
     environment:
-      - NODE_ENV=production
-      # Firebase config
-      - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
-      - FIREBASE_CLIENT_EMAIL=${FIREBASE_CLIENT_EMAIL}
-      - FIREBASE_PRIVATE_KEY=${FIREBASE_PRIVATE_KEY}
-      # Line LIFF config
-      - NEXT_PUBLIC_LIFF_ID=${NEXT_PUBLIC_LIFF_ID}
-      # Email config
-      - GMAIL_USER=${GMAIL_USER}
-      - GMAIL_PASS=${GMAIL_PASS}
-      - NOTIFICATION_EMAILS=${NOTIFICATION_EMAILS}
-    restart: unless-stopped
+      NODE_ENV: production
+    restart: always
+    networks:
+      - webnet
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost:3000"]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 3
       start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+networks:
+  webnet:
+    driver: bridge
