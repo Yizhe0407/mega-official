@@ -2,18 +2,23 @@
 import { initializeApp, cert, getApps, getApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
-// 防止被重複初始化
-const app = !getApps().length
-  ? initializeApp({
-      credential: cert({
-        // 這三組用你的環境變數取代
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-      }),
-    })
-  : getApp();
+let db = null;
 
-const db = getFirestore(app);
+const { FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY } = process.env;
+
+// 只有在三個環境變數都有設定時，才初始化 Firebase
+if (FIREBASE_PROJECT_ID && FIREBASE_CLIENT_EMAIL && FIREBASE_PRIVATE_KEY) {
+  const app = !getApps().length
+    ? initializeApp({
+        credential: cert({
+          projectId: FIREBASE_PROJECT_ID,
+          clientEmail: FIREBASE_CLIENT_EMAIL,
+          privateKey: FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+        }),
+      })
+    : getApp();
+
+  db = getFirestore(app);
+}
 
 export { db };
